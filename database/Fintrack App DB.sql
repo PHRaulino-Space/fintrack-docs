@@ -1,16 +1,16 @@
-SET search_path TO private;
 CREATE TABLE "users" (
-  "id" UUID PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
   "name" VARCHAR(100) NOT NULL,
+  "username" VARCHAR(100) UNIQUE NOT NULL,
   "email" VARCHAR(100) UNIQUE NOT NULL,
   "created_at" TIMESTAMP DEFAULT (now()),
   "updated_at" TIMESTAMP DEFAULT (now())
 );
 
 CREATE TABLE "accounts" (
-  "id" UUID PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
   "user_id" UUID NOT NULL,
-  "name" VARCHAR(100) NOT NULL,
+  "name" VARCHAR(100) UNIQUE NOT NULL,
   "type" VARCHAR(50) NOT NULL,
   "initial_balance" NUMERIC(15,2) NOT NULL,
   "currency" VARCHAR(10) NOT NULL,
@@ -19,51 +19,51 @@ CREATE TABLE "accounts" (
 );
 
 CREATE TABLE "categories" (
-  "id" UUID PRIMARY KEY,
-  "name" VARCHAR(100) NOT NULL,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
+  "name" VARCHAR(100) UNIQUE NOT NULL,
   "color" VARCHAR(100) NOT NULL,
   "icon" VARCHAR(100) NOT NULL,
-  "transaction_type" UUID NOT NULL,
   "created_at" TIMESTAMP DEFAULT (now()),
   "updated_at" TIMESTAMP DEFAULT (now())
 );
 
 CREATE TABLE "subcategories" (
-  "id" UUID PRIMARY KEY,
-  "name" VARCHAR(100) NOT NULL,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
+  "name" VARCHAR(100) UNIQUE NOT NULL,
   "category_id" UUID NOT NULL,
   "created_at" TIMESTAMP DEFAULT (now()),
   "updated_at" TIMESTAMP DEFAULT (now())
 );
 
 CREATE TABLE "transaction_statuses" (
-  "id" UUID PRIMARY KEY,
-  "name" VARCHAR(50) NOT NULL,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
+  "name" VARCHAR(50) UNIQUE NOT NULL,
   "created_at" TIMESTAMP DEFAULT (now()),
   "updated_at" TIMESTAMP DEFAULT (now())
 );
 
 CREATE TABLE "cards" (
-  "id" UUID PRIMARY KEY,
-  "name" VARCHAR(100) NOT NULL,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
+  "name" VARCHAR(100) UNIQUE NOT NULL,
   "credit_limit" NUMERIC(15,2) NOT NULL,
   "account_id" UUID NOT NULL,
+  "closing_date" INTEGER NOT NULL,
+  "due_date" INTEGER NOT NULL,
   "created_at" TIMESTAMP DEFAULT (now()),
   "updated_at" TIMESTAMP DEFAULT (now())
 );
 
 CREATE TABLE "invoices" (
-  "id" UUID PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
   "card_id" UUID NOT NULL,
   "billing_month" DATE NOT NULL,
-  "due_date" DATE NOT NULL,
-  "status" VARCHAR(50) NOT NULL,
+  "status" UUID NOT NULL,
   "created_at" TIMESTAMP DEFAULT (now()),
   "updated_at" TIMESTAMP DEFAULT (now())
 );
 
 CREATE TABLE "transfers" (
-  "id" UUID PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
   "transfer_date" DATE NOT NULL,
   "description" TEXT,
   "amount" NUMERIC(15,2) NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE "transfers" (
 );
 
 CREATE TABLE "recurring_transactions" (
-  "id" UUID PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
   "amount" NUMERIC(15,2) NOT NULL,
   "description" VARCHAR(50) NOT NULL,
   "frequency" VARCHAR(50) NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE "recurring_transactions" (
 );
 
 CREATE TABLE "investments" (
-  "id" UUID PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
   "asset_name" VARCHAR(100) NOT NULL,
   "type" VARCHAR(50) NOT NULL,
   "account_id" UUID NOT NULL,
@@ -102,7 +102,7 @@ CREATE TABLE "investments" (
 );
 
 CREATE TABLE "tags" (
-  "id" UUID PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
   "name" VARCHAR(100) NOT NULL,
   "color" VARCHAR(20),
   "created_at" TIMESTAMP DEFAULT (now()),
@@ -117,7 +117,7 @@ CREATE TABLE "recurring_transactions_tags" (
 );
 
 CREATE TABLE "incomes" (
-  "id" UUID PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
   "transaction_date" DATE NOT NULL,
   "description" TEXT,
   "amount" NUMERIC(15,2) NOT NULL,
@@ -131,7 +131,7 @@ CREATE TABLE "incomes" (
 );
 
 CREATE TABLE "expenses" (
-  "id" UUID PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
   "transaction_date" DATE NOT NULL,
   "description" TEXT,
   "amount" NUMERIC(15,2) NOT NULL,
@@ -145,7 +145,7 @@ CREATE TABLE "expenses" (
 );
 
 CREATE TABLE "expenses_card" (
-  "id" UUID PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
   "transaction_date" DATE NOT NULL,
   "description" TEXT,
   "amount" NUMERIC(15,2) NOT NULL,
@@ -158,7 +158,7 @@ CREATE TABLE "expenses_card" (
 );
 
 CREATE TABLE "chargeback_card" (
-  "id" UUID PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
   "transaction_date" DATE NOT NULL,
   "description" TEXT,
   "amount" NUMERIC(15,2) NOT NULL,
@@ -168,18 +168,18 @@ CREATE TABLE "chargeback_card" (
 );
 
 CREATE TABLE "payment_card" (
-  "id" UUID PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
   "transaction_date" DATE NOT NULL,
   "amount" NUMERIC(15,2) NOT NULL,
   "account_id" UUID NOT NULL,
-  "invoice_id" UUID,
-  "fl_finaly" BOOLEAN,
+  "invoice_id" UUID NOT NULL,
+  "fl_finally" BOOLEAN NOT NULL DEFAULT false,
   "created_at" TIMESTAMP DEFAULT (now()),
   "updated_at" TIMESTAMP DEFAULT (now())
 );
 
 CREATE TABLE "investment_deposit" (
-  "id" UUID PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
   "transaction_date" DATE NOT NULL,
   "description" TEXT,
   "amount" NUMERIC(15,2) NOT NULL,
@@ -190,7 +190,7 @@ CREATE TABLE "investment_deposit" (
 );
 
 CREATE TABLE "investment_withdrawal" (
-  "id" UUID PRIMARY KEY,
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
   "transaction_date" DATE NOT NULL,
   "description" TEXT,
   "amount" NUMERIC(15,2) NOT NULL,
@@ -228,22 +228,17 @@ CREATE TABLE "expense_card_tags" (
   "updated_at" TIMESTAMP DEFAULT (now())
 );
 
-CREATE TABLE "transactions_types" (
-  "id" UUID PRIMARY KEY,
-  "name" VARCHAR(50) NOT NULL,
-  "created_at" TIMESTAMP DEFAULT (now()),
-  "updated_at" TIMESTAMP DEFAULT (now())
-);
+CREATE UNIQUE INDEX ON "invoices" ("card_id", "billing_month");
 
 ALTER TABLE "accounts" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-
-ALTER TABLE "categories" ADD FOREIGN KEY ("transaction_type") REFERENCES "transactions_types" ("id");
 
 ALTER TABLE "subcategories" ADD FOREIGN KEY ("category_id") REFERENCES "categories" ("id");
 
 ALTER TABLE "cards" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
 
 ALTER TABLE "invoices" ADD FOREIGN KEY ("card_id") REFERENCES "cards" ("id");
+
+ALTER TABLE "invoices" ADD FOREIGN KEY ("status") REFERENCES "transaction_statuses" ("id");
 
 ALTER TABLE "transfers" ADD FOREIGN KEY ("source_account_id") REFERENCES "accounts" ("id");
 
