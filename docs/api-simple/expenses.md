@@ -26,7 +26,7 @@ Delete an existing expense
 | 400 | Bad Request | object |
 | 500 | Internal Server Error | object |
 
-## GET `/expenses`
+## GET `/accounts/{account_id}/expenses`
 
 **Resumo:** List expenses
 
@@ -41,7 +41,7 @@ List all expenses for a given account
 | Nome | Em | Tipo | Obrigatório | Descrição |
 | --- | --- | --- | --- | --- |
 | X-Workspace-ID | header | string | sim | Workspace ID |
-| account_id | query | string | sim | Account ID |
+| account_id | path | string | sim | Account ID |
 | start_date | query | string | não | Start Date (YYYY-MM-DD) |
 | end_date | query | string | não | End Date (YYYY-MM-DD) |
 
@@ -78,7 +78,7 @@ Get a single expense by its ID
 | 400 | Bad Request | object |
 | 500 | Internal Server Error | object |
 
-## POST `/expenses`
+## POST `/accounts/{account_id}/expenses`
 
 **Resumo:** Create a new expense
 
@@ -91,6 +91,7 @@ Get a single expense by its ID
 | Nome | Em | Tipo | Obrigatório | Descrição |
 | --- | --- | --- | --- | --- |
 | X-Workspace-ID | header | string | sim | Workspace ID |
+| account_id | path | string | sim | Account ID |
 | expense | body | v1.createExpenseRequest | sim | Expense object |
 
 ### Respostas
@@ -509,7 +510,6 @@ Sem propriedades.
 
 | Campo | Tipo | Obrigatório | Descrição |
 | --- | --- | --- | --- |
-| account_id | string | sim |  |
 | amount | number | sim |  |
 | category_id | string | sim |  |
 | description | string | sim |  |

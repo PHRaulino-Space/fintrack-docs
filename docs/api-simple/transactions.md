@@ -1,6 +1,37 @@
 ---
 title: Transactions
 ---
+## GET `/transactions`
+
+**Resumo:** List transactions
+
+List all transactions for the workspace with optional filters
+
+**Consumes:** application/json
+
+**Produces:** application/json
+
+### Parâmetros
+
+| Nome | Em | Tipo | Obrigatório | Descrição |
+| --- | --- | --- | --- | --- |
+| X-Workspace-ID | header | string | sim | Workspace ID |
+| type | query | string | não | Filter by type (comma-separated): expense,income,transfer,investment_deposit,investment_withdraw |
+| account_id | query | string | não | Account ID |
+| card_id | query | string | não | Card ID (not supported yet) |
+| investment_id | query | string | não | Investment ID |
+| date_from | query | string | não | Start Date (YYYY-MM-DD) |
+| date_to | query | string | não | End Date (YYYY-MM-DD) |
+
+### Respostas
+
+| Status | Descrição | Schema |
+| --- | --- | --- |
+| 200 | OK | array&lt;v1.transactionResponse&gt; |
+| 400 | Bad Request | object |
+| 404 | Not Found | object |
+| 500 | Internal Server Error | object |
+
 ## POST `/card-chargebacks`
 
 **Resumo:** Create card chargeback
@@ -76,7 +107,7 @@ Create a new card payment transaction
 | 400 | Bad Request | object |
 | 500 | Internal Server Error | object |
 
-## POST `/investment-deposits`
+## POST `/investments/{investment_id}/deposits`
 
 **Resumo:** Create investment deposit
 
@@ -91,6 +122,7 @@ Create a new investment deposit
 | Nome | Em | Tipo | Obrigatório | Descrição |
 | --- | --- | --- | --- | --- |
 | X-Workspace-ID | header | string | sim | Workspace ID |
+| investment_id | path | string | sim | Investment ID |
 | deposit | body | v1.createInvestmentDepositRequest | sim | Investment Deposit object |
 
 ### Respostas
@@ -101,7 +133,7 @@ Create a new investment deposit
 | 400 | Bad Request | object |
 | 500 | Internal Server Error | object |
 
-## POST `/investment-withdrawals`
+## POST `/investments/{investment_id}/withdrawals`
 
 **Resumo:** Create investment withdrawal
 
@@ -116,6 +148,7 @@ Create a new investment withdrawal
 | Nome | Em | Tipo | Obrigatório | Descrição |
 | --- | --- | --- | --- | --- |
 | X-Workspace-ID | header | string | sim | Workspace ID |
+| investment_id | path | string | sim | Investment ID |
 | withdrawal | body | v1.createInvestmentWithdrawalRequest | sim | Investment Withdrawal object |
 
 ### Respostas
@@ -622,7 +655,6 @@ Sem propriedades.
 | account_id | string | sim |  |
 | amount | number | sim |  |
 | description | string | não |  |
-| investment_id | string | sim |  |
 | transaction_date | string | sim |  |
 
 #### v1.createInvestmentWithdrawalRequest
@@ -632,5 +664,21 @@ Sem propriedades.
 | account_id | string | sim |  |
 | amount | number | sim |  |
 | description | string | não |  |
-| investment_id | string | sim |  |
 | transaction_date | string | sim |  |
+
+#### v1.transactionResponse
+
+| Campo | Tipo | Obrigatório | Descrição |
+| --- | --- | --- | --- |
+| account_id | string | não |  |
+| amount | number | não |  |
+| category_id | string | não |  |
+| description | string | não |  |
+| destination_account_id | string | não |  |
+| id | string | não |  |
+| investment_id | string | não |  |
+| source_account_id | string | não |  |
+| sub_category_id | string | não |  |
+| transaction_date | string | não |  |
+| transaction_status | entity.TransactionStatus | não |  |
+| type | string | não |  |

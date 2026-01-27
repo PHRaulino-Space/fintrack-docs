@@ -26,7 +26,7 @@ Delete an existing income
 | 400 | Bad Request | object |
 | 500 | Internal Server Error | object |
 
-## GET `/incomes`
+## GET `/accounts/{account_id}/incomes`
 
 **Resumo:** List incomes
 
@@ -41,7 +41,7 @@ List all incomes for a given account
 | Nome | Em | Tipo | Obrigatório | Descrição |
 | --- | --- | --- | --- | --- |
 | X-Workspace-ID | header | string | sim | Workspace ID |
-| account_id | query | string | sim | Account ID |
+| account_id | path | string | sim | Account ID |
 | start_date | query | string | não | Start Date (YYYY-MM-DD) |
 | end_date | query | string | não | End Date (YYYY-MM-DD) |
 
@@ -78,7 +78,7 @@ Get a single income by its ID
 | 400 | Bad Request | object |
 | 500 | Internal Server Error | object |
 
-## POST `/incomes`
+## POST `/accounts/{account_id}/incomes`
 
 **Resumo:** Create a new income
 
@@ -91,6 +91,7 @@ Get a single income by its ID
 | Nome | Em | Tipo | Obrigatório | Descrição |
 | --- | --- | --- | --- | --- |
 | X-Workspace-ID | header | string | sim | Workspace ID |
+| account_id | path | string | sim | Account ID |
 | income | body | v1.createIncomeRequest | sim | Income object |
 
 ### Respostas
@@ -137,7 +138,6 @@ Sem propriedades.
 
 | Campo | Tipo | Obrigatório | Descrição |
 | --- | --- | --- | --- |
-| account_id | string | sim |  |
 | amount | number | sim |  |
 | category_id | string | sim |  |
 | description | string | sim |  |
